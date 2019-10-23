@@ -5,18 +5,11 @@
 #include <cstring>
 #include <DSString.h>
 #include <DSVector.h>
-#include <vector>
-
-template <typename T>
-class Node{
-public:
-    Node* next;
-    T data;
-};
+#include <DSNode.h>
 
 using namespace std;
 
-template <typename T>
+template <class T>
 class DSLinkedList{
 private:
     T* elements;
@@ -24,7 +17,7 @@ private:
     int capacity;
 public:
     int length;
-    Node<T>* head, tail;
+    DSNode<T>* head, tail;
 
     DSLinkedList();
     ~DSLinkedList();
@@ -54,7 +47,7 @@ template <typename T>
 void DSLinkedList<T>::createNode(T val){
 
     //creates new node, stores next value as NULL
-    Node<T>* temp = new Node<T>();
+    DSNode<T>* temp = new DSNode<T>();
     temp->data = val;
     temp->next = NULL;
 
@@ -73,7 +66,7 @@ void DSLinkedList<T>::createNode(T val){
 
 template <typename T>
 void DSLinkedList<T>::insertStart(T value){
-    Node<T> *node = new Node<T>();
+    DSNode<T> *node = new DSNode<T>();
     node->data = value;
     node->next = head;
     head = node;
@@ -81,7 +74,7 @@ void DSLinkedList<T>::insertStart(T value){
 
 template <typename T>
 void DSLinkedList<T>::insertEnd(T value){
-    Node<T> *node = new Node<T>();
+    DSNode<T> *node = new DSNode<T>();
     node->data = value;
     tail->next = node;
     tail = node;
@@ -89,9 +82,9 @@ void DSLinkedList<T>::insertEnd(T value){
 
 template <typename T>
 void DSLinkedList<T>::insertMiddle(int pos, T value){
-    Node<T> *node = new Node<T>();
-    Node<T> *prev = new Node<T>();
-    Node<T> *curr = new Node<T>();
+    DSNode<T> *node = new DSNode<T>();
+    DSNode<T> *prev = new DSNode<T>();
+    DSNode<T> *curr = new DSNode<T>();
     curr = head;
     for(int i = 0; i < pos; i++){
         prev = curr;

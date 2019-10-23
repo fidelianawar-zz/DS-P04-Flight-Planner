@@ -10,6 +10,7 @@ SOURCES += \
 
 HEADERS += \
     DSLinkedList.h \
+    DSNode.h \
     DSString.h \
     DSVector.h \
     catch.hpp
