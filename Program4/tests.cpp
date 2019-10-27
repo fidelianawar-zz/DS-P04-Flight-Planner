@@ -1,11 +1,15 @@
 #include "catch.hpp"
 #include "DSString.h"
 #include "DSVector.h"
+#include "DSLinkedList.h"
+#include "DSNode.h"
 
 using namespace std;
 
-TEST_CASE("DSString", "[DSString]"){
-    DSString name = "fidelia";
+TEST_CASE("DSLL creation", "[DSLinkedList]"){
+    DSLinkedList<int> *newNode = new DSLinkedList<int>();
+
+
     REQUIRE(name == "fidelia");
 }
 TEST_CASE("DSString +", "[DSString]"){
