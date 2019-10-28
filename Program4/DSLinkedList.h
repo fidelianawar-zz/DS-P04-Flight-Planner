@@ -12,43 +12,107 @@ using namespace std;
 template <class T>
 class DSLinkedList{
 private:
-    T* elements;
-    int vectorSize;
-    int capacity;
-public:
-    int length;
-    DSNode<T>* head, tail;
+    int elementsNum; //indicates number of elements
+    DSNode<T>* head;
+    DSNode<T>* tail;
+    DSNode<T>* iteratorNode; //first and last elements of LL
 
-    DSLinkedList();
+public:
+    DSLinkedList(); //default
+    DSLinkedList(const T&);
+    DSLinkedList(const DSNode<T>&); //copy
+
     ~DSLinkedList();
 
     void createNode(T);
-    void insertStart(T);
-    void insertMiddle(int, T);
-    void insertEnd(T);
+    void insertStart(const T&);
+    void insertMiddle(int, const T&);
+    void insertEnd(const T&);
+    void add(const T&);
 
+    void removeAtIndex(int);
     void deleteFirst();
     void deleteLast();
 
     void print();
+    void copyAll(const DSLinkedList<T>&);
 
+    T get(int);
+    bool contains(const T&);
+    int getSize(); //num elements in LL
+    DSLinkedList<T>& operator=(const DSLinkedList<T>&);
+    void clear();
     T pop();
     T peek();
 };
 
+//default constructor
+template<class T>
+DSLinkedList<T>::DSLinkedList() {
+    head = nullptr;
+    tail = nullptr;
+    iteratorNode = nullptr;
+    elementsNum = 0;
+}
 
-template <typename T>
-DSLinkedList<T>::DSLinkedList(){
-    this->length = 0;
-    this->head = NULL;
-    this->tail = NULL;
+//constructor that accepts a value to create a one-element linked list
+template<class T>
+DSLinkedList<T>::DSLinkedList(const T& val) {
+    DSNode<T>* element = new DSNode<T>(val);
+    head = tail = iteratorNode = element; //head and tail point to only node
+    elementsNum = 1;
 }
 
 template <typename T>
 DSLinkedList<T>::~DSLinkedList(){
-    std::cout << "LIST DELETED";
+    clear();
 }
 
+//releases all memory allocated to nodes and destroys nodes and their payloads
+template<class T>
+void DSLinkedList<T>::clear() {
+    if (elementsNum != 0) { //if linked list isn't already empty
+        if (elementsNum == 1) { //edge case: if only contains one element
+            tail = nullptr;
+            iteratorNode = nullptr;
+            delete head;
+        }
+        else {
+            tail = nullptr;
+            iteratorNode = nullptr;
+            while (head != nullptr) {
+                DSNode<T>* current = head; //current points to element pointed to by head before head advances
+                head = head->next; //head points to next element
+                delete current; //deletes and deallocates pointers of node just vacated by head
+            }
+        }
+        elementsNum = 0;
+    }
+}
+
+template<class T>
+DSLinkedList<T>& DSLinkedList<T>::operator=(const DSLinkedList<T>& otherList){
+    if(otherList != this){
+        DSNode<T> temp = head;
+        while(temp.next != NULL){
+            head = head->next;
+            delete temp;
+            temp = head;
+
+        }
+        int count = 0;
+        temp = otherList.head;
+        while(temp != NULL){
+            insertStart(temp);
+        }
+    }
+    return *this;
+}
+
+template <typename T>
+int DSLinkedList<T>::getSize(){
+    return elementsNum;
+}
 template <typename T>
 void DSLinkedList<T>::createNode(T val){
 
@@ -82,7 +146,7 @@ void DSLinkedList<T>::print(){
 }
 
 template <typename T>
-void DSLinkedList<T>::insertStart(T value){
+void DSLinkedList<T>::insertStart(const T& value){
     DSNode<T> *node = new DSNode<T>();
     node->data = value;
 
@@ -94,19 +158,25 @@ void DSLinkedList<T>::insertStart(T value){
 }
 
 template <typename T>
-void DSLinkedList<T>::insertEnd(T value){
-    DSNode<T> *node = new DSNode<T>();
-    node->data = value;
-
-    //make the tail point to the new node
-    tail->next = node;
-
-    //make the tail the new node
-    tail = node;
+void DSLinkedList<T>::insertEnd(const T& value){
+    DSNode<T> *newNode = new DSNode<T>(value);
+    if(elementsNum == 0){
+        head = tail = iteratorNode = newNode;
+    }
+    else{
+        DSNode<T>* current = head;
+        while(current->next != NULL){
+            current = current->next;
+        }
+        current->next = newNode;
+        newNode->prev = current;
+        tail = newNode;
+    }
+    elementsNum++;
 }
 
 template <typename T>
-void DSLinkedList<T>::insertMiddle(int pos, T value){
+void DSLinkedList<T>::insertMiddle(int pos, const T& value){
     DSNode<T> *prev = new DSNode<T>();
     DSNode<T> *curr = new DSNode<T>();
     DSNode<T> *temp = new DSNode<T>();

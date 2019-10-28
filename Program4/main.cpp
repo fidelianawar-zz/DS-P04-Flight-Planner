@@ -1,9 +1,22 @@
+#define CATCH_CONFIG_RUNNER
+
 #include <iostream>
+#include <fstream>
+#include "catch.hpp"
+#include "DSLinkedList.h"
+#include "DSNode.h"
+#include "DSString.h"
+#include "DSVector.h"
 
 using namespace std;
 
-int main()
-{
-    cout << "Hello World!" << endl;
-    return 0;
+//runs test cases without cmd args
+int runCatchTests(int argc, char* argv[1]){
+    return Catch::Session().run(argc,argv);
+}
+
+int main(int arc, char *argv[]){
+    if(arc == 1){
+        return runCatchTests(arc, argv);
+    }
 }
