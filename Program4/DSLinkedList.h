@@ -40,7 +40,10 @@ public:
     T get(int);
     bool contains(const T&);
     int getSize(); //num elements in LL
+
     DSLinkedList<T>& operator=(const DSLinkedList<T>&);
+    T& operator[](int);
+
     void clear();
     T pop();
     T peek();
@@ -107,6 +110,20 @@ DSLinkedList<T>& DSLinkedList<T>::operator=(const DSLinkedList<T>& otherList){
         }
     }
     return *this;
+}
+
+//returns reference to element value at a parameter index in this linked list
+template<class T>
+T& DSLinkedList<T>::operator[](int index) {
+    //identical code to get method
+    if (index >= elementsNum || index < 0) {
+        throw std::out_of_range("Index is out of bounds");
+    }
+    DSNode<T>* current = head;
+    for (int i = 0; i < index; i++) {
+        current = current->next;
+    }
+    return current->data;
 }
 
 template <typename T>
