@@ -9,8 +9,10 @@ SOURCES += \
         tests.cpp
 
 HEADERS += \
+    DSAdjacencyList.h \
     DSLinkedList.h \
     DSNode.h \
+    DSStack.h \
     DSString.h \
     DSVector.h \
     catch.hpp
