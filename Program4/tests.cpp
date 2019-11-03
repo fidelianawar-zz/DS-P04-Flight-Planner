@@ -100,17 +100,17 @@ TEST_CASE("DSLinkedList class", "[DSLinkedList]"){
         REQUIRE(oneList[1] == oneList[2]);
     }
     SECTION("add to front check") {
-        emptyListInt.addToFront(3);
+        emptyListInt.insertFront(3);
         REQUIRE(emptyListInt.getSize() == 1);
         REQUIRE(emptyListInt[0] == 3);
         DSString str = "UPPERCASE STRING";
-        listofStrings.addToFront(str);
+        listofStrings.insertFront(str);
         REQUIRE(listofStrings.getSize() == 12);
         REQUIRE(listofStrings[0] == listofStrings[4]);
         //REQUIRE(listofStrings[11] == "yo");
         DSString str1 = oneList[0];
-        oneList.addToFront("");
-        oneList.addToFront("");
+        oneList.insertFront("");
+        oneList.insertFront("");
         REQUIRE(oneList[0] == oneList[1]);
         REQUIRE(oneList[2] == str1);
     }
@@ -134,11 +134,15 @@ TEST_CASE("DSLinkedList class", "[DSLinkedList]"){
         REQUIRE(equalStringList[1] == listofStrings[3]);
     }
     SECTION("clear function check") {
-            ascendingList.emptyList();
-            REQUIRE(ascendingList.getSize() == 0);
-            listofStrings.emptyList();
-            REQUIRE(listofStrings.getSize() == 0);
-        }
+        ascendingList.emptyList();
+        REQUIRE(ascendingList.getSize() == 0);
+        listofStrings.emptyList();
+        REQUIRE(listofStrings.getSize() == 0);
+    }
+    SECTION("insert middle function check"){
+        equalStringList.insertMiddle(5,"insert");
+        REQUIRE(equalStringList[5] == "insert");
+    }
 }
 
 TEST_CASE("Stack class", "[stack]"){
@@ -168,7 +172,7 @@ TEST_CASE("Stack class", "[stack]"){
         s2.push(s[i]);
     }
 
-    SECTION("Pop function") {
+    SECTION("pop function check") {
         REQUIRE(s1.pop() == 9);
         REQUIRE(s1.size() == 9);
         REQUIRE(s2.pop() == "hell it me");
@@ -176,14 +180,14 @@ TEST_CASE("Stack class", "[stack]"){
         REQUIRE(s2.size() == 9);
     }
 
-    SECTION("Peek function") {
+    SECTION("peek function check") {
         REQUIRE(s1.peek() == 9);
         REQUIRE(s1.size() == 10);
         REQUIRE(s2.peek() == "hell it me");
         REQUIRE(s2.size() == 11);
     }
 
-    SECTION("Push function") {
+    SECTION("push function check") {
         s3.push(5);
         REQUIRE(s3.peek() == 5);
         REQUIRE(s3.isEmpty() == false);
@@ -197,7 +201,7 @@ TEST_CASE("Stack class", "[stack]"){
         REQUIRE(s4.peek() == "oof");
     }
 
-    SECTION("IsEmpty function") {
+    SECTION("isEmpty function check") {
         REQUIRE(s1.isEmpty() == false);
         REQUIRE(s2.isEmpty() == false);
         REQUIRE(s3.isEmpty() == true);
