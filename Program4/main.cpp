@@ -7,6 +7,7 @@
 #include "DSNode.h"
 #include "DSString.h"
 #include "DSVector.h"
+#include "FlightPlan.h"
 
 using namespace std;
 
@@ -18,5 +19,13 @@ int runCatchTests(int argc, char* argv[1]){
 int main(int arc, char *argv[]){
     if(arc == 1){
         return runCatchTests(arc, argv);
+    }else{
+        FlightPlan flight;
+        //fPlan.printFlightData(); //tests accuracy of adjacency list
+        flight.readFlightData(argv[1], argv[2],argv[3]);
+        //flight.readRequestedFlights(argv[2], argv[3]);
     }
+
+
 }
+

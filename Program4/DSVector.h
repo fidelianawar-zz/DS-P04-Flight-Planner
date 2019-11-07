@@ -1,3 +1,4 @@
+
 #ifndef TEMPLATEVECTOR_H
 #define TEMPLATEVECTOR_H
 
@@ -37,6 +38,7 @@ public:
 
     T insert(T obj);
     T* printVector();
+    T& operator[](int);
 
 
 };
@@ -127,6 +129,12 @@ T DSVector<T>::at(int index){
         cerr << "not a valid index to access";
         exit(1);
     }
+    return elements[index];
+}
+
+//access index of element in vector
+template <typename T>
+T& DSVector<T>::operator[](int index){
     return elements[index];
 }
 

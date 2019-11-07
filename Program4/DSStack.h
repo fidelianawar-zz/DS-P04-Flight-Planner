@@ -20,8 +20,6 @@ private:
     DSLinkedList<T> data;
 };
 
-#endif
-
 //removes element from top of the stack
 template<class T>
 T DSStack<T>::pop() {
@@ -66,3 +64,5 @@ template<class T>
 T DSStack<T>::get(int index) {
     return data.get(index);
 }
+
+#endif
