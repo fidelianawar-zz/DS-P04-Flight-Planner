@@ -135,7 +135,12 @@ T DSVector<T>::at(int index){
 //access index of element in vector
 template <typename T>
 T& DSVector<T>::operator[](int index){
-    return elements[index];
+    if(index >= vectorSize){
+        throw std::out_of_range("OUT OF RANGE");
+    }
+    else{
+        return elements[index];
+    }
 }
 
 // delete repeated elements

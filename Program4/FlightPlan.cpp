@@ -115,7 +115,7 @@ void FlightPlan::readRequestedFlights(char* requestedFlights, char* outputFile) 
 
         for (int i = 0; i < adjList.getSize(); i++) {
                 cout << "here";
-            for (int j = 0; j < adjList[i].getSize(); j++) {
+            for (int j = 0; j < adjList[i].size(); j++) {
                 if (adjList[i].get(0).getName() == departure) {
 
                     cout << adjList[i].get(0).getName();
@@ -177,7 +177,7 @@ void FlightPlan::findPaths(AirportCity a, DSString b) {
         }
 
         if (adjList[indexLoc].hasNext()) { //checks to see if iterator has reached end of linkedlist (no more arrival nodes to check)
-            AirportCity next = adjList[indexLoc].getNextElement();
+            AirportCity next = adjList[indexLoc].getNext();
             if (!path.contains(next)) { //check to see if airport is already in the path
                 path.push(next); //add next airport to stack
                 if (path.peek().getName() == b) { //check to see if most recent airport is destination
@@ -187,7 +187,7 @@ void FlightPlan::findPaths(AirportCity a, DSString b) {
             }
         }
         else { //if iterator has reached end of linkedlist
-            adjList[indexLoc].resetIterator(); //put iterator back at head of departure linkedlist
+            adjList[indexLoc].reset(); //put iterator back at head of departure linkedlist
             adjList[indexLoc].backtrack(); //move iterator to first arrival node
             path.pop(); //go back to last visited airport
         }

@@ -22,7 +22,7 @@ void AdjacencyList::addAirport(DSString departureCity, DSString arrivalCity, dou
         AirportCity newOrigin(departureCity); //create a departure node with cost and time as zero
         DSLinkedList<AirportCity> newList(newOrigin); //create linkedlist with departure node as head
         AirportCity dest(arrivalCity, cost, time, airline); //create arrival node with associated cost and time
-        newList.insertEnd(dest); //add to linkedlist with connected departure node
+        newList.add(dest); //add to linkedlist with connected departure node
         adjacencyList.push_back(newList); //add to adjacency list
        // adjacencyList.printVector();
         //cout << adjacencyList.getSize() << endl;
@@ -31,7 +31,7 @@ void AdjacencyList::addAirport(DSString departureCity, DSString arrivalCity, dou
         bool arrival = arrivalExists(arrivalCity, location, airline); //checks to see if arrival node exists in departure linkedlist
         if (arrival == false) {
             AirportCity dest(arrivalCity, cost, time, airline); //create new arrival node with associated cost and time
-            adjacencyList[location].insertEnd(dest); //add to existing departure linkedlist in adjacency list
+            adjacencyList[location].add(dest); //add to existing departure linkedlist in adjacency list
         }
     }
 }
@@ -51,7 +51,7 @@ int AdjacencyList::departureExists(DSString city) {
 
 //checks to see if arrival node already exists in departure linkedlist
 bool AdjacencyList::arrivalExists(DSString city, int locationIndex, DSString airline) {
-    for (int i = 0; i < adjacencyList[locationIndex].getSize(); i++) {
+    for (int i = 0; i < adjacencyList[locationIndex].size(); i++) {
         //if there is an arrival node in departure linkedlist with the same name as parameter
         if (adjacencyList[locationIndex][i].getName() == city && adjacencyList[locationIndex][i].getAirline() == airline) {
             if(adjacencyList[i].get(0).getName() == city && !(adjacencyList[i].get(0).getAirline() == airline)){
@@ -68,7 +68,7 @@ bool AdjacencyList::arrivalExists(DSString city, int locationIndex, DSString air
 void AdjacencyList::printFlightData() {
 
     for (int i = 0; i < adjacencyList.getSize(); i++) { //for every linkedlist in adjList
-        for (int j = 0; j < adjacencyList[i].getSize(); j++) { //for every Airport node in associated linkedlist
+        for (int j = 0; j < adjacencyList[i].size(); j++) { //for every Airport node in associated linkedlist
 
             cout<<adjacencyList[i][j].getName(); //prints out Airport data
 

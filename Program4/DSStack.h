@@ -29,19 +29,19 @@ T DSStack<T>::pop() {
 //returns element at the top of the stack
 template<class T>
 T DSStack<T>::peek() {
-    return data[(data.getSize()-1)];
+    return data[(data.size()-1)];
 }
 
 //adds element at the top of the stack
 template<class T>
 void DSStack<T>::push(T element) {
-    data.insertEnd(element);
+    data.add(element);
 }
 
 //checks to see if there are any elements in stack
 template<class T>
 bool DSStack<T>::isEmpty() {
-    if (data.getSize() == 0) {
+    if (data.size() == 0) {
         return true;
     }
     return false;
@@ -50,7 +50,7 @@ bool DSStack<T>::isEmpty() {
 //returns number of elements in stack
 template<class T>
 int DSStack<T>::size() {
-    return data.getSize();
+    return data.size();
 }
 
 //checks to see if element exists in stack
