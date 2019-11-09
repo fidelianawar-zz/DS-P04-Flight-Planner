@@ -253,6 +253,13 @@ TEST_CASE("Adjacency class", "[adjacency]"){
             REQUIRE(testList[1].get(0).getName() == "Los Angeles");
             REQUIRE(testList[3].get(4).getCost() == 676);
             REQUIRE(testList[3].get(6).getTime() == 23);
+            REQUIRE(testList[5].get(2).getCost() == 245);
+            REQUIRE(testList[3].get(6).getTime() == 23);
+        }
+    }
+    for(int i = 0; i < testList.getSize(); i++){
+        if (testList[i].get(0).getName() == city1 && !(testList[i].get(0).getAirline() == airline1)) {
+            testList[i].get(0).setAirline(airline1);
         }
         SECTION("empty"){
             testList.empty();
@@ -260,3 +267,4 @@ TEST_CASE("Adjacency class", "[adjacency]"){
         }
     }
 }
+
