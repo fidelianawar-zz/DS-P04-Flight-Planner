@@ -8,7 +8,8 @@ SOURCES += \
         ../P04FlightPlanner/DSAdjacencyList.cpp \
         ../P04FlightPlanner/DSString.cpp \
         ../P04FlightPlanner/FlightPlan.cpp \
-        ../P04FlightPlanner/main.cpp
+        ../P04FlightPlanner/main.cpp \
+        ../P04FlightPlanner/tests.cpp
 
 HEADERS += \
     ../P04FlightPlanner/AirportCity.h \

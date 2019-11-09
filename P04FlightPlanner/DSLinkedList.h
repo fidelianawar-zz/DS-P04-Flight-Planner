@@ -30,6 +30,7 @@ class DSLinkedList
 
         void insert(const T&); //add to end
         void addFront(const T&);
+        void insertMiddle(int, const T&);
 
         int size(); //returns number of elements in linked list
         void remove(int); //removes at index
@@ -173,6 +174,28 @@ void DSLinkedList<T>::addFront(const T& val) {
     elementsNum++;
 }
 
+
+template <typename T>
+void DSLinkedList<T>::insertMiddle(int pos, const T& value){
+    DSNode<T> *prev = new DSNode<T>();
+    DSNode<T> *curr = new DSNode<T>();
+    DSNode<T> *temp = new DSNode<T>(value);
+
+    //set current node to be equal to head
+    curr = head;
+    //iterate to position of insertion
+    for(int i = 0; i < pos; i++){
+        //make prev point to current, make curr point to next
+        prev = curr;
+        curr = curr->next;
+    }
+    temp->data = value;
+    //temp->data = value;
+
+    //make prev point to temp, make temp point to curr
+    prev->next = temp;
+    temp->next = curr;
+}
 
 //returns number of elements in LL
 template<class T>
