@@ -7,14 +7,16 @@ template<class T>
 class DSStack
 {
 public:
-    T pop();
-    T peek();
-    void push(T);
-    bool isEmpty();
+
     int size();
 
     bool contains(const T&);
     T get(int);
+    bool isEmpty();
+
+    void push(T);
+    T pop();
+    T peek();
 
 private:
     DSLinkedList<T> data;

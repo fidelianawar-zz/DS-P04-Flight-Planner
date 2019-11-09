@@ -1,5 +1,5 @@
-#ifndef AIRPORTCITY_H
-#define AIRPORTCITY_H
+#ifndef AirportCity_H
+#define AirportCity_H
 
 #include "DSString.h"
 #include "DSVector.h"
@@ -20,13 +20,13 @@ class AirportCity {
         DSString getAirline();
         void setAirline(DSString);
 
-        void print(); //test function to print data contained in Airport object
+        void print(); //test function to print data contained in AirportCity object
 
     private:
         DSString name;
+        DSString airline;
         double cost;
         int time;
-        DSString airline;
 };
 
-#endif // AIRPORTCITY_H
+#endif // AirportCity_H
