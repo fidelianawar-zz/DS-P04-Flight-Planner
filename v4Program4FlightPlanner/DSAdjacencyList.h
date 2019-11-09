@@ -16,8 +16,8 @@ class DSAdjacencyList {
     public:
         DSAdjacencyList();
         void addNode(DSString, DSString, double, int, DSString);  //add arrival node
-        int departureExists(DSString);
-        bool arrivalExists(DSString, int, DSString);
+        int departureExists(DSString); //gets position of departure (head) node
+        bool arrivalExists(DSString, int, DSString); //returns T/F if arrival is in path or not
 
         DSVector<DSLinkedList<AirportCity>>& getAdjList();
         void printFlightData();

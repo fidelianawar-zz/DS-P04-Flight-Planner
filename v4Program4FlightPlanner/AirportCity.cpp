@@ -69,4 +69,3 @@ void AirportCity::setAirline(DSString airlineName){
 void AirportCity::print() {
     std::cout << name << " " << cost << " " << time << " " << airline << std::endl;
 }
-

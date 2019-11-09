@@ -11,7 +11,7 @@ class AirportCity {
         AirportCity(DSString);
         AirportCity(DSString, double, int, DSString);
 
-
+        //getters and setters for all necessary information related to a node
         DSString getName();
         void setName(DSString);
         double getCost();
@@ -21,6 +21,7 @@ class AirportCity {
         DSString getAirline();
         void setAirline(DSString);
 
+        //used to compare if two AirportCity objects are equal or not
         bool operator==(const AirportCity&);
         void print();
 

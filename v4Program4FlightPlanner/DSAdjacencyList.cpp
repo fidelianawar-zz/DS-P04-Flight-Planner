@@ -1,4 +1,4 @@
-﻿#include "AirportCity.h"
+#include "AirportCity.h"
 #include "DSAdjacencyList.h"
 #include "DSStack.h"
 #include "DSLinkedList.h"
@@ -21,7 +21,7 @@ void DSAdjacencyList::addNode(DSString departure, DSString arrival, double cost,
     int indexLoc = departureExists(departure); //checks if departure node  exists
     if (indexLoc == -1) {
         AirportCity originalCity(departure); //create a departure node
-        DSLinkedList<AirportCity> newList(originalCity);
+        DSLinkedList<AirportCity> newList(originalCity); //LL of head nodes
         AirportCity destinationCity(arrival, cost, time, airline);
         newList.insert(destinationCity);
         DSadjacencyList.push_back(newList);

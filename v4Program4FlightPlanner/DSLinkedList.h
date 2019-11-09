@@ -99,6 +99,12 @@ DSLinkedList<T>::DSLinkedList(const DSLinkedList<T>& lst) {
     }
 }
 
+//returns number of elements in LL
+template<class T>
+int DSLinkedList<T>::size() {
+    return elementsNum;
+}
+
 //copies all data from parameter list into data list
 template<class T>
 void DSLinkedList<T>::copyElements(const DSLinkedList<T>& lst) {
@@ -197,11 +203,6 @@ void DSLinkedList<T>::insertMiddle(int pos, const T& value){
     temp->next = curr;
 }
 
-//returns number of elements in LL
-template<class T>
-int DSLinkedList<T>::size() {
-    return elementsNum;
-}
 
 //removes node at index
 template<class T>
@@ -238,7 +239,6 @@ void DSLinkedList<T>::remove(int index) {
         for (int i = 0; i < index; i++) {
             current = current->next;
         }
-
         current->next->prev = current->prev;
         current->prev->next = current->next;
         delete current;

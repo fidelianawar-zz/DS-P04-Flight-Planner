@@ -1,4 +1,3 @@
-
 #ifndef TEMPLATEVECTOR_H
 #define TEMPLATEVECTOR_H
 
@@ -18,7 +17,7 @@ private:
 
 public:
     DSVector();
-    DSVector(const int); //constructor with capacity parameter
+    DSVector(const int); //constructor w/ capacity param
     DSVector(const DSVector<T>&); //copy constructor
     ~DSVector();
 
@@ -60,14 +59,14 @@ DSVector<T>::DSVector(int cap) {
     elements = new T[capacity];
 }
 
-//Parameterized constructor taking a Vector object to instantiate this Vector
+//parameterized constructor to instantiate vector
 template<typename T>
 DSVector<T>::DSVector(const DSVector<T>& v) {
     vectorSize = v.vectorSize;
     capacity = v.capacity;
     elements = new T[capacity];
     for (int i = 0; i < vectorSize; i++) {
-        elements[i] = v.elements[i]; //assigning parameter vector's contents to this Vector
+        elements[i] = v.elements[i];
     }
 }
 
@@ -128,44 +127,28 @@ bool DSVector<T>::empty(){
 template<typename T>
 void DSVector<T>::resizeVector() {
     capacity += 10;
-    T* temp = new T[capacity]; //copy elements of arr to a temporary array
+    T* temp = new T[capacity]; //copy content of elements to a temp array
     for (int i = 0; i < vectorSize; i++) {
         temp[i] = elements[i];
     }
-    delete[] elements; //delete elements of and release memory in private data member array
+    delete[] elements; //release memory
 
     elements = new T[capacity];
     for (int i = 0; i < vectorSize; i++) {
-        elements[i] = temp[i]; //copy elements from temp to reallocated memory in arr
+        elements[i] = temp[i]; //copy elements from temp to reallocated memory in elements
     }
-    delete[] temp; //delete elements of and release memory in temporary array
+    delete[] temp; // release memory in temporary array
 }
 
-//Allows addition of item of typename T to end of vector
+//push back item to end of vector
 template<typename T>
 void DSVector<T>::push_back(const T& item) {
-    if (vectorSize == capacity) { //allocates more capacity if no space for new item
+    if (vectorSize == capacity) { //allocates more capacity if not enough space
         resizeVector();
     }
     elements[vectorSize] = item;
     vectorSize++;
 }
-
-//    if(vectorSize >= capacity){
-
-//        //double capacity
-//        capacity *= 2;
-//        T* temp = new T[capacity];
-//        for(int i = 0; i < vectorSize; i++){
-//            temp[i] = elements[i];
-//        }
-//        delete [] elements;
-//        elements = temp;
-
-//    }
-//    elements[vectorSize] = elem;
-//    vectorSize++;
-
 
 //access index of element in vector
 template <typename T>
@@ -300,4 +283,3 @@ void DSVector<T>::pop_back() {
 }
 
 #endif // TEMPLATEVECTOR_H
-

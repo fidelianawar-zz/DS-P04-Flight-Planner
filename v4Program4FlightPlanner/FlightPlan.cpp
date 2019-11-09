@@ -348,4 +348,3 @@ void FlightPlan::displayPath(ofstream& outFile, char requestedInput) {
         totalPaths.pop_back();
     }
 }
-
