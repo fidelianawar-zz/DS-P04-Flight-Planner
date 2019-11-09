@@ -8,7 +8,8 @@ SOURCES += \
         DSAdjacencyList.cpp \
         DSString.cpp \
         FlightPlan.cpp \
-        main.cpp
+        main.cpp \
+        tests.cpp
 
 HEADERS += \
     AirportCity.h \

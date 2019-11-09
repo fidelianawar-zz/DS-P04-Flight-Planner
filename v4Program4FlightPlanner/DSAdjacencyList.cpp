@@ -60,6 +60,45 @@ bool DSAdjacencyList::arrivalExists(DSString city, int indexLocation, DSString a
     return false;
 }
 
+
+//use iterative backtracking
+void DSAdjacencyList::determinePath(AirportCity a, DSString b) {
+
+    int locationIndex;
+    path.push(a);
+
+    //resets iterator to first arrival node
+    for (int i = 0; i < DSadjacencyList.getSize(); i++) {
+        DSadjacencyList[i].backtrack();
+    }
+
+    //search for all possible paths until empty
+    while (!path.isEmpty()) {
+        AirportCity temp = path.peek(); //most recently visited
+        for (int i = 0; i < DSadjacencyList.getSize(); i++) {
+            if (DSadjacencyList[i].get(0).getName() == temp.getName()) {
+                locationIndex = i;
+            }
+        }
+
+        if (DSadjacencyList[locationIndex].hasNext()) { //has iterator has reached end of LL
+            AirportCity next = DSadjacencyList[locationIndex].getNext();
+            if (!path.contains(next)) { //is airport is already in the path
+                path.push(next);
+                if (path.peek().getName() == b) { //is most recent airport is destination
+                    allPaths.push_back(path);
+                    path.pop();
+                }
+            }
+        }
+        else {
+            DSadjacencyList[locationIndex].resetIterator(); //iterator is reset to head
+            DSadjacencyList[locationIndex].backtrack(); //move iterator to first arrival node
+            path.pop();
+        }
+    }
+}
+
 //test reading in of data in adjacency list
 void DSAdjacencyList::printFlightData() {
     for (int i = 0; i < DSadjacencyList.getSize(); i++) {
