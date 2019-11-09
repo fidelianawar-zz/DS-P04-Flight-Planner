@@ -23,14 +23,14 @@ void DSAdjacencyList::addNode(DSString departure, DSString arrival, double cost,
         AirportCity originalCity(departure); //create a departure node
         DSLinkedList<AirportCity> newList(originalCity);
         AirportCity destinationCity(arrival, cost, time, airline);
-        newList.add(destinationCity);
+        newList.insert(destinationCity);
         DSadjacencyList.push_back(newList);
     }
     else { //departure node exists
         bool locExists = arrivalExists(arrival, indexLoc, airline); //checks if arrival node exists in departure LL
         if (locExists == false) {
             AirportCity dest(arrival, cost, time, airline);
-            DSadjacencyList[indexLoc].add(dest);
+            DSadjacencyList[indexLoc].insert(dest);
         }
     }
 }

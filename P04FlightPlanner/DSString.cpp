@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <cstring>
-#include <DSString.h>
+#include "DSString.h"
 
 using namespace std;
 
@@ -20,9 +20,6 @@ DSString::DSString(const char* x){
 }
 
 DSString::DSString(const DSString& r){
-//        data = new char[strlen(r.data)+1];
-//        strcpy(data, r.data);
-//        ssize = r.ssize;
     ssize = r.ssize;
     data = new char[ssize+1];
     for (int i = 0; i < ssize; i++) {

@@ -22,25 +22,25 @@ private:
     DSLinkedList<T> data;
 };
 
-//removes element from top of the stack
+//removes element from top of stack
 template<class T>
 T DSStack<T>::pop() {
-    return data.removeFromBack();
+    return data.removeBack();
 }
 
-//returns element at the top of the stack
+//returns element at top of stack
 template<class T>
 T DSStack<T>::peek() {
     return data[(data.size()-1)];
 }
 
-//adds element at the top of the stack
+//pushes element to top
 template<class T>
 void DSStack<T>::push(T element) {
-    data.add(element);
+    data.insert(element);
 }
 
-//checks to see if there are any elements in stack
+//checks to see if stack is empty
 template<class T>
 bool DSStack<T>::isEmpty() {
     if (data.size() == 0) {
@@ -61,7 +61,7 @@ bool DSStack<T>::contains(const T& element) {
     return data.contains(element);
 }
 
-//returns element in stack at a specified index
+//returns element at specific index of stack
 template<class T>
 T DSStack<T>::get(int index) {
     return data.get(index);

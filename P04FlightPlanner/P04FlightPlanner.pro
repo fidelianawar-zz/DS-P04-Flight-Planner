@@ -23,4 +23,6 @@ HEADERS += \
 DISTFILES += \
     ../CSE2341-F19-Fidelia-Nawar/Sprint4/build-Program4-Desktop_Qt_5_10_0_GCC_64bit-Debug/flightDataInput.txt \
     ../CSE2341-F19-Fidelia-Nawar/Sprint4/build-Program4-Desktop_Qt_5_10_0_GCC_64bit-Debug/output.txt \
-    ../CSE2341-F19-Fidelia-Nawar/Sprint4/build-Program4-Desktop_Qt_5_10_0_GCC_64bit-Debug/requestedFlightPath.txt
+    ../CSE2341-F19-Fidelia-Nawar/Sprint4/build-Program4-Desktop_Qt_5_10_0_GCC_64bit-Debug/requestedFlightPath.txt \
+    ../build-P04FlightPlanner-Desktop_Qt_5_10_0_GCC_64bit-Debug/flightInput.txt \
+    ../build-P04FlightPlanner-Desktop_Qt_5_10_0_GCC_64bit-Debug/requestedFlightPath.txt

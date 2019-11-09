@@ -186,7 +186,7 @@ void FlightPlan::determinePath(AirportCity a, DSString b) {
             }
         }
         else {
-            adjacencyList[locationIndex].reset(); //iterator is reset to head
+            adjacencyList[locationIndex].resetIterator(); //iterator is reset to head
             adjacencyList[locationIndex].backtrack(); //move iterator to first arrival node
             flightPath.pop();
         }

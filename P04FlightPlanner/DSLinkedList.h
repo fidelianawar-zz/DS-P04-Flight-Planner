@@ -1,5 +1,5 @@
-#ifndef LINKED_LIST
-#define LINKED_LIST
+#ifndef DSLINKED_LIST
+#define DSLINKED_LIST
 
 #include <iostream>
 
@@ -28,192 +28,210 @@ class DSLinkedList
         DSLinkedList(const T&); //constructor accepting a value
         DSLinkedList(const DSLinkedList<T>&); //copy constructor
 
-        void add(const T&); //add to end
-        void addToFront(const T&);
-        T get(int);
-        bool contains(const T&);
+        void insert(const T&); //add to end
+        void addFront(const T&);
 
         int size(); //returns number of elements in linked list
         void remove(int); //removes at index
-        T removeFromFront();
-        T removeFromBack();
+        T removeFront();
+        T removeBack();
 
         ~DSLinkedList();
 
         T& operator[](int);
         DSLinkedList<T>& operator=(const DSLinkedList<T>&); //assignment operator
 
-        void copyAll(const DSLinkedList<T>&); //copies all data into this linked list
-        void clear(); //clears all data and deallocates memory for nodes
+        void copyElements(const DSLinkedList<T>&); //copies all data into this LL
+        void emptyList(); //clears data and deallocates memory of nodes
         void print();
 
         T getNext();
         bool hasNext();
-        void reset();
+
+        T get(int);
+        bool contains(const T&);
+
+
+        void resetIterator();
         void backtrack();
 
     private:
-        DSNode<T>* head; //points to first element of linked list
-        DSNode<T>* back; //points to last element of linked list
-        DSNode<T>* iter;
-        int numElements;
+        DSNode<T>* head; //first element of LL
+        DSNode<T>* tail; //last element of LL
+        DSNode<T>* iterator;
+        int elementsNum;
 };
 
 //default constructor
 template<class T>
 DSLinkedList<T>::DSLinkedList() {
     head = nullptr;
-    back = nullptr;
-    iter = nullptr;
-    numElements = 0;
+    tail = nullptr;
+    iterator = nullptr;
+    elementsNum = 0;
 }
 
-//constructor that accepts a value to create a one-element linked list
+
+//destructor to release memory allocated in creating nodes
+template<class T>
+DSLinkedList<T>::~DSLinkedList() {
+    emptyList();
+}
+
+//constructor to create a one-element LL with value
 template<class T>
 DSLinkedList<T>::DSLinkedList(const T& val) {
     DSNode<T>* element = new DSNode<T>(val);
-    head = back = iter = element; //head and back point to only node
-    numElements = 1;
+    head = tail = iterator = element;
+    elementsNum = 1;
 }
 
-//copy constructor that sets this linked list equal to linked list parameter
+//copy constructor setting curr LL to parameter LL
 template<class T>
 DSLinkedList<T>::DSLinkedList(const DSLinkedList<T>& lst) {
-    if (lst.numElements == 0) { //edge case: if lst is empty, then initialize as if it were default constructor
-        head = back = iter = nullptr;
-        numElements = 0;
+    if (lst.elementsNum == 0) { //initialize as default constructor if lst empty
+        head = tail = iterator = nullptr;
+        elementsNum = 0;
     }
     else {
-        copyAll(lst); //copies all elements from lst to this linked list
+        copyElements(lst); //copies all elements from parameter list to data LL
     }
 }
 
-//adds value as a payload of a node to the end of this linked list
+//copies all data from parameter list into data list
 template<class T>
-void DSLinkedList<T>::add(const T& val) {
-    DSNode<T>* newPtr = new DSNode<T>(val);
-    if (numElements == 0) { //edge case: if the list is empty
-        head = back = iter = newPtr; //head and back point to newly created node
+void DSLinkedList<T>::copyElements(const DSLinkedList<T>& lst) {
+    insert(lst.head->data);
+    if (lst.elementsNum == 1) {
+        tail = head;
     }
     else {
-        //back->next = newPtr; //link new node to end of list
-        //newPtr->prev = back;
-        //back = newPtr; //point end pointer to new last node
+        DSNode<T>* current = lst.head->next;
+        while (current != nullptr) {
+            insert(current->data);
+            tail = current;
+            current = current->next;
+        }
+    }
+    elementsNum = lst.elementsNum;
+}
 
-        //ensures newPtr is added to end of the DSLinkedList
+//clears/destroys nodes; deallocates memory
+template<class T>
+void DSLinkedList<T>::emptyList() {
+    if (elementsNum != 0) {
+        if (elementsNum == 1) {
+            tail = nullptr;
+            iterator = nullptr;
+            delete head;
+        }
+        else {
+            tail = nullptr;
+            iterator = nullptr;
+            while (head != nullptr) {
+                DSNode<T>* current = head;
+                head = head->next;
+                delete current;
+            }
+        }
+        elementsNum = 0;
+    }
+}
+
+//inserts node with val to end of list
+template<class T>
+void DSLinkedList<T>::insert(const T& val) {
+    DSNode<T>* newPtr = new DSNode<T>(val);
+    if (elementsNum == 0) { //if the list is empty
+        head = tail = iterator = newPtr;
+    }
+    else {
+
         DSNode<T>* current = head;
         while (current->next != nullptr) {
             current = current->next;
         }
-
-        //connects new node to last node in DSLinkedList
         current->next = newPtr;
         newPtr->prev = current;
-        back = newPtr; //manually sets back to newly added element
+        tail = newPtr;
     }
-    numElements++;
+    elementsNum++;
 }
 
-//adds value as payload of node at beginning of this linked list
+//add value to beginning of list
 template<class T>
-void DSLinkedList<T>::addToFront(const T& val) {
+void DSLinkedList<T>::addFront(const T& val) {
     DSNode<T>* newPtr = new DSNode<T>(val);
-    if (numElements == 0) { //edge case: if list is empty
-        head = back = iter = newPtr;
+    if (elementsNum == 0) {
+        head = tail = iterator = newPtr;
     }
     else {
-        head->prev = newPtr; //link new node to front of list
+        head->prev = newPtr;
         newPtr->next = head;
-        head = newPtr; //point head pointer to new first node
+        head = newPtr;
     }
-    numElements++;
+    elementsNum++;
 }
 
-//returns value of element at index parameter
-template<class T>
-T DSLinkedList<T>::get(int index) {
-    if (index >= numElements || index < 0) { //edge case: if index is not valid (0 to numElements-1)
-        throw std::out_of_range("Index is out of bounds");
-    }
-    DSNode<T>* current = head;
-    for (int i = 0; i < index; i++) { //iterates through linked list until node with index is found
-        current = current->next;
-    }
-    return current->data; //return data payload contained by that node
-}
 
-//Returns true if linked list contains specified element
-template<class T>
-bool DSLinkedList<T>::contains(const T& element) {
-    DSNode<T>* current = head;
-    while (current != nullptr) {
-        if (current->data == element) {
-            return true;
-        }
-        current = current->next; //moves to next node
-    }
-    return false;
-}
-
-//returns number of elements in this linked list
+//returns number of elements in LL
 template<class T>
 int DSLinkedList<T>::size() {
-    return numElements;
+    return elementsNum;
 }
 
-//removes node at a parameter index
+//removes node at index
 template<class T>
 void DSLinkedList<T>::remove(int index) {
-    if (index >= numElements || index < 0) { //edge case: if index is not valid (0 to numElements-1)
+    if (index >= elementsNum || index < 0) {
         throw std::out_of_range("Index is out of bounds");
     }
-
-    if(numElements == 0) { //edge case: if list is empty already
+    if(elementsNum == 0) {
         return;
     }
-    else if (numElements == 1) { //edge case: if list has only one element
-        back = nullptr;
-        iter = nullptr;
-        delete head; //deletes and releases memory allocated to first and only element
+    else if (elementsNum == 1) {
+        tail = nullptr;
+        iterator = nullptr;
+        delete head;
         head = nullptr;
-        numElements = 0;
+        elementsNum = 0;
     }
-    else if (index == 0) { //edge case: if first element is the one to be removed
+    else if (index == 0) {
         DSNode<T>* temp = head;
-        head = temp->next; //move pointer to first node to second element
-        delete temp; //delete first element
-        head->prev = nullptr; //set new first element backward looking pointer to null
-        numElements--;
+        head = temp->next;
+        delete temp;
+        head->prev = nullptr;
+        elementsNum--;
     }
-    else if (index == numElements-1) { //edge case: if last element is the one to be deleted
-        DSNode<T>* temp = back;
-        back = temp->prev; //move pointer to last node to second to last element
-        delete temp; //delete last element
-        back->next = nullptr; //set new last element forward looking pointer to null
-        numElements--;
+    else if (index == elementsNum-1) {
+        DSNode<T>* temp = tail;
+        tail = temp->prev;
+        delete temp;
+        tail->next = nullptr;
+        elementsNum--;
     }
     else {
         DSNode<T>* current = head;
-        for (int i = 0; i < index; i++) { //iterates to element to be deleted
+        for (int i = 0; i < index; i++) {
             current = current->next;
         }
-        //reassigns forward pointer of previous node and backward pointer of next node to connect previous and next nodes to each other
+
         current->next->prev = current->prev;
         current->prev->next = current->next;
         delete current;
-        numElements--;
+        elementsNum--;
     }
 }
 
 template<class T>
-T DSLinkedList<T>::removeFromFront() {
-    if (numElements != 0) {
-        if (numElements == 1) {
+T DSLinkedList<T>::removeFront() {
+    if (elementsNum != 0) {
+        if (elementsNum == 1) {
             T element = head->data;
-            back = nullptr;
-            iter = nullptr;
+            tail = nullptr;
+            iterator = nullptr;
             delete head;
-            numElements = 0;
+            elementsNum = 0;
             return element;
         }
         else {
@@ -225,35 +243,30 @@ T DSLinkedList<T>::removeFromFront() {
 }
 
 template<class T>
-T DSLinkedList<T>::removeFromBack() {
-    if (numElements != 0) {
-        if (numElements == 1) {
-                T element = back->data;
-                back = nullptr;
-                iter = nullptr;
+T DSLinkedList<T>::removeBack() {
+    if (elementsNum != 0) {
+        if (elementsNum == 1) {
+                T element = tail->data;
+                tail = nullptr;
+                iterator = nullptr;
                 delete head;
-                numElements = 0;
+                elementsNum = 0;
                 return element;
         }
         else {
-            T element = back->data;
-            remove(numElements-1);
+            T element = tail->data;
+            remove(elementsNum-1);
             return element;
         }
     }
 }
 
-//destructor to release memory allocated in creating nodes
-template<class T>
-DSLinkedList<T>::~DSLinkedList() {
-    clear();
-}
 
 //returns reference to element value at a parameter index in this linked list
 template<class T>
 T& DSLinkedList<T>::operator[](int index) {
     //identical code to get method
-    if (index >= numElements || index < 0) {
+    if (index >= elementsNum || index < 0) {
         throw std::out_of_range("Index is out of bounds");
     }
     DSNode<T>* current = head;
@@ -263,102 +276,87 @@ T& DSLinkedList<T>::operator[](int index) {
     return current->data;
 }
 
-//assignment operator that performs deep copy of nodes and payload
+//overloaded equals operator that performs deep copy of nodes
 template<class T>
 DSLinkedList<T>& DSLinkedList<T>::operator=(const DSLinkedList<T>& lst) {
-    clear(); //deallocates all memory and destroys nodes/payloads
-
-    if (lst.numElements == 0) {
-        head = back = iter = nullptr; //default constructor-like code
-        numElements = 0;
+    emptyList();
+    if (lst.elementsNum == 0) {
+        head = tail = iterator = nullptr;
+        elementsNum = 0;
     }
     else {
-        copyAll(lst); //calls method to copy all elements in parameter lst
+        copyElements(lst);
     }
 
     return *this;
 }
 
-//copies all data from parameter lst into this linked list
+//returns value of element at parameter
 template<class T>
-void DSLinkedList<T>::copyAll(const DSLinkedList<T>& lst) {
-    add(lst.head->data); //head points to newly created first node based on first value of lst
-    if (lst.numElements == 1) {
-        back = head;
+T DSLinkedList<T>::get(int index) {
+    if (index >= elementsNum || index < 0) {
+        throw std::out_of_range("Index is out of bounds");
     }
-    else {
-        DSNode<T>* current = lst.head->next; //sets current pointer at second node of lst
-        while (current != nullptr) { //iterates until end of the parameter list
-            add(current->data); //calls add function to properly allocate memory for new node
-            back = current;
-            current = current->next; //advances to next node with data to be copied
-        }
+    DSNode<T>* current = head;
+    for (int i = 0; i < index; i++) {
+        current = current->next;
     }
-    numElements = lst.numElements;
+    return current->data;
 }
 
-//releases all memory allocated to nodes and destroys nodes and their payloads
+//returns true if LL contains parameter element
 template<class T>
-void DSLinkedList<T>::clear() {
-    if (numElements != 0) { //if linked list isn't already empty
-        if (numElements == 1) { //edge case: if only contains one element
-            back = nullptr;
-            iter = nullptr;
-            delete head;
+bool DSLinkedList<T>::contains(const T& element) {
+    DSNode<T>* current = head;
+    while (current != nullptr) {
+        if (current->data == element) {
+            return true;
         }
-        else {
-            back = nullptr;
-            iter = nullptr;
-            while (head != nullptr) {
-                DSNode<T>* current = head; //current points to element pointed to by head before head advances
-                head = head->next; //head points to next element
-                delete current; //deletes and deallocates pointers of node just vacated by head
-            }
-        }
-        numElements = 0;
+        current = current->next;
     }
+    return false;
 }
 
-//prints out all payloads of this linked list
+//prints out elements of list
 template<class T>
 void DSLinkedList<T>::print() {
-    if (head != nullptr) { //if list is not empty
+    if (head != nullptr) {
         DSNode<T>* current = head;
-        while (current->next != nullptr) { //while there is a valid next element
-            std::cout << current->data << std::endl; //print current payload
-            current = current->next; //advance pointer to next element
+        while (current->next != nullptr) {
+            std::cout << current->data << std::endl;
+            current = current->next;
         }
-        std::cout << current->data << std::endl; //print last node's payload (which did not print through while loop)
+        std::cout << current->data << std::endl;
     }
 }
 
-//returns next item in the linked list
+//returns next item in the LL
 template<class T>
 T DSLinkedList<T>::getNext() {
-    T temp = iter->data;
-    iter = iter->next;
+    T temp = iterator->data;
+    iterator = iterator->next;
     return temp;
 }
 
-//checks to see if end of linked list has been reached
+//checks if end has been reached
 template<class T>
 bool DSLinkedList<T>::hasNext() {
-    if (iter == nullptr) {
+    if (iterator == nullptr) {
         return false;
     }
     return true;
 }
 
-//puts iterator through linked list back at beginning
+//puts iterator at beginning
 template<class T>
-void DSLinkedList<T>::reset() {
-    iter = head;
+void DSLinkedList<T>::resetIterator() {
+    iterator = head;
 }
 
-//for flight plan project: sets iterator at second element
+//iterator set to second element
 template<class T>
 void DSLinkedList<T>::backtrack() {
-    iter = head->next;
+    iterator = head->next;
 }
 
 #endif
