@@ -3,6 +3,7 @@
 #include "DSVector.h"
 #include "DSLinkedList.h"
 #include "DSStack.h"
+#include "DSAdjacencyList.h"
 
 using namespace std;
 
@@ -62,9 +63,6 @@ TEST_CASE("DSLinkedList class", "[DSLinkedList]"){
         }
         DSLinkedList<DSString> strings1 = emptyListString;
         REQUIRE(strings1.size() == 0);
-        //DSLinkedList<DSString> strings2 = oneList;
-        //REQUIRE(strings2.getSize() == 1);
-        //REQUIRE(strings2[0] == testString[10]);
     }
     SECTION("get function check") {
         REQUIRE(ascendingList.get(2) == 2);
@@ -79,7 +77,6 @@ TEST_CASE("DSLinkedList class", "[DSLinkedList]"){
         REQUIRE(testString.size() == 0);
         testString = oneList;
         REQUIRE(testString.size() == 1);
-        //REQUIRE(strings1[0] == testString[10]);
         DSLinkedList<int> integers1(4);
         ascendingList = integers1;
         REQUIRE(ascendingList.size() == 1);
@@ -95,7 +92,6 @@ TEST_CASE("DSLinkedList class", "[DSLinkedList]"){
         REQUIRE(listofStrings[11] == listofStrings[3]);
         oneList.insert("Los Angeles");
         oneList.insert("Los Angeles");
-        //oneList.print();
         REQUIRE(oneList[1] == oneList[2]);
     }
     SECTION("add to front check") {
@@ -113,6 +109,7 @@ TEST_CASE("DSLinkedList class", "[DSLinkedList]"){
         REQUIRE(oneList[0] == oneList[1]);
         REQUIRE(oneList[2] == str1);
     }
+
     SECTION("remove function check") {
         oneElement.remove(0);
         REQUIRE(oneElement.size() == 0);
@@ -205,5 +202,61 @@ TEST_CASE("Stack class", "[stack]"){
         REQUIRE(s2.isEmpty() == false);
         REQUIRE(s3.isEmpty() == true);
         REQUIRE(s4.isEmpty() == true);
+    }
+}
+TEST_CASE("Adjacency class", "[adjacency]"){
+    DSAdjacencyList adjList;
+    DSVector<DSLinkedList<AirportCity>> testList;
+    DSString city1 = "Dallas";
+    DSString city2 = "Los Angeles";
+    DSString city3 = "NY";
+    DSString city4 = "Bali";
+    DSString city5 = "Bora Bora";
+    DSString city6 = "Seattle";
+    DSString airline1 = "American";
+    DSString airline2 = "United";
+    DSString airline3 = "Spirit";
+    DSString airline4 = "Alaskan";
+    DSString airline5 = "British";
+    DSString airline6 = "Qatar";
+    double cost1 = 49;
+    double cost2 = 24;
+    double cost3 = 56;
+    double cost4 = 676;
+    double cost5 = 245;
+    double cost6 = 23;
+    int time1 = 302;
+    int time2 = 234;
+    int time3 = 134;
+    int time4 = 245;
+    int time5 = 45645;
+
+    SECTION("adding node check") {
+        adjList.addNode(city1, city2, cost1, time1, airline1);
+        testList = adjList.getAdjList();
+        REQUIRE(testList.getSize() == 1);
+    }
+    SECTION("size check") {
+        adjList.addNode(city2, city5, cost2, time2, airline2);
+        adjList.addNode(city6, city1, cost3, time3, airline3);
+        adjList.addNode(city2, city3, cost4, time4, airline4);
+        adjList.addNode(city3, city6, cost5, time5, airline5);
+        testList = adjList.getAdjList();
+        REQUIRE(testList.getSize() == 3);
+    }
+    SECTION("element check"){
+        AirportCity dallas("Dallas");
+        AirportCity path("Dallas", 400, 24, "American");
+        for(int i = 0; i < testList.getSize(); i++){
+            REQUIRE(dallas.getName() == "Dallas");
+            REQUIRE(testList[0].get(0).getName() == "Dallas");
+            REQUIRE(testList[1].get(0).getName() == "Los Angeles");
+            REQUIRE(testList[3].get(4).getCost() == 676);
+            REQUIRE(testList[3].get(6).getTime() == 23);
+        }
+        SECTION("empty"){
+            testList.empty();
+            REQUIRE(testList.getSize() == 0);
+        }
     }
 }
