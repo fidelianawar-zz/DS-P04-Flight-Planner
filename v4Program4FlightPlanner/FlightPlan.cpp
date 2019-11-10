@@ -193,11 +193,152 @@ void FlightPlan::determinePath(AirportCity a, DSString b) {
     }
 }
 
-//prints to output file best 3 paths or error if no paths
-void FlightPlan::displayPath(ofstream& outFile, char requestedInput) {
+void FlightPlan::calculateCost(ofstream& outFile){
 
     double layoverCost = 0.0;
     int layoverTime = 0;
+    int pathNumber = 0;
+    double recentLowest = 0;
+
+    for (int i = 0; i < 3; i++) { //only iterate 3 times
+        if (i > totalPaths.getSize()-1) { //if paths number < 3, stop
+            break;
+        }
+        pathNumber++;
+        int index = -1; //index of path with lowest cost
+        double cheapest = 20000;
+        for (int i = 0; i < totalPaths.getSize(); i++) {
+            double currCost = 0;
+            for (int j = 0; j < totalPaths[i].size(); j++) {
+                currCost += totalPaths[i].get(j).getCost(); //calculates cost of current path
+            }
+
+            //sets currCost as lowest it is lower than prev
+            if (currCost < cheapest && currCost > recentLowest) {
+                cheapest = currCost;
+                index = i;
+            }
+        }
+
+        recentLowest = cheapest;
+
+        double totalCost = cheapest;
+        int totalTime = 0;
+
+        for (int i = 0; i < totalPaths[index].size(); i++) {
+
+            //output name of airport
+            outFile << totalPaths[index].get(i).getName();
+
+            //checks to see if first departure node or not
+            if(totalPaths[index].get(i).getAirline() == ""){
+
+            }
+            else{
+                outFile << " (" << totalPaths[index].get(i).getAirline() << ")";
+            }
+            if(i == totalPaths[index].size()-1){
+                outFile << ". ";
+
+            }
+            else{
+                outFile << " -> ";
+                //if it is not direct flight (more than 2 nodes), do this
+                if((totalPaths[index].size() > 2)){
+                    //if airline names don't match, 65 min time incr
+                    if(!(totalPaths[index].get(i).getAirline() == totalPaths[index].get(i+1).getAirline())){
+                        layoverCost += 19;
+                        layoverTime += 65;
+                    }
+                }
+            }
+            totalTime += totalPaths[index].get(i).getTime();
+        }
+
+        //make sure the end destination node does not get extra time/cost added onto it
+        if(totalPaths[index].size() > 2){
+            layoverCost -= 19;
+            layoverTime -= 43;
+        }
+
+        outFile << "Time: " << totalTime + layoverTime<< " "; //outputs total time
+        outFile << "Cost: " << fixed << setprecision(2) << totalCost + layoverCost << endl; //outputs total cost
+    }
+
+}
+
+void FlightPlan::calculateTime(ofstream& outFile)
+{
+    int pathNumber = 0;
+    int recentLowest = 0; //track most recen time
+    double layoverCost = 0.0;
+    int layoverTime = 0;
+
+    for (int i = 0; i < 3; i++) {
+        if (i > totalPaths.getSize()-1) {
+            break;
+        }
+        pathNumber++;
+        int index = -1; //path with lowest time
+        int fastest = 2000;
+        for (int i = 0; i < totalPaths.getSize(); i++) {
+            int currTime = 0;
+            for (int j = 0; j < totalPaths[i].size(); j++) {
+                currTime += totalPaths[i].get(j).getTime(); //calculates total time of current path
+            }
+
+            //sets currTime as fastest if faster tha nprev
+            if (currTime < fastest && currTime > recentLowest) {
+                fastest = currTime;
+                index = i;
+            }
+        }
+
+        recentLowest = fastest;
+
+        int totalTime = fastest;
+        double totalCost = 0;
+
+        //outputs formatted path
+        outFile << "Path " << pathNumber << ": ";
+
+        for (int i = 0; i < totalPaths[index].size(); i++) { //outputs each airport in path
+            outFile << totalPaths[index].get(i).getName();
+
+            if(totalPaths[index].get(i).getAirline() == ""){
+
+            }
+            else{
+                outFile << " (" << totalPaths[index].get(i).getAirline() << ")";
+            }
+            if(i == totalPaths[index].size()-1){
+                outFile << ". ";
+
+            }
+            else{
+                outFile << " -> ";
+                if((totalPaths[index].size() > 2)){
+                    if(!(totalPaths[index].get(i).getAirline() == totalPaths[index].get(i+1).getAirline())){
+                        layoverCost += 19;
+                        layoverTime += 65;
+                    }
+                }
+            }
+            totalCost += totalPaths[index].get(i).getCost();
+        }
+        if(totalPaths[index].size() > 2){
+            layoverCost -= 19;
+            layoverTime -= 43;
+        }
+        outFile << "Time: " << totalTime + layoverTime << " "; //outputs total time
+        outFile << "Cost: " << fixed << setprecision(2) << totalCost + layoverCost<< endl; //outputs total cost
+    }
+
+    outFile << endl;
+}
+
+//prints to output file best 3 paths or error if no paths
+void FlightPlan::displayPath(ofstream& outFile, char requestedInput) {
 
     //if no paths were found
     if (totalPaths.empty() == true) {
@@ -205,146 +346,17 @@ void FlightPlan::displayPath(ofstream& outFile, char requestedInput) {
     }
     else {
         if (requestedInput == 'C') { //cost order
+            calculateCost(outFile);
 
-            int pathNumber = 0;
-            double recentLowest = 0;
-
-            for (int i = 0; i < 3; i++) { //only iterate 3 times
-                if (i > totalPaths.getSize()-1) { //if paths number < 3, stop
-                    break;
-                }
-                pathNumber++;
-                int index = -1; //index of path with lowest cost
-                double cheapest = 20000;
-                for (int i = 0; i < totalPaths.getSize(); i++) {
-                    double currCost = 0;
-                    for (int j = 0; j < totalPaths[i].size(); j++) {
-                        currCost += totalPaths[i].get(j).getCost(); //calculates cost of current path
-                    }
-
-                    //sets currCost as lowest it is lower than prev
-                    if (currCost < cheapest && currCost > recentLowest) {
-                        cheapest = currCost;
-                        index = i;
-                    }
-                }
-
-                recentLowest = cheapest;
-
-                double totalCost = cheapest;
-                int totalTime = 0;
-
-                //outputs path
-                outFile << "Path " << pathNumber << ": ";
-
-                for (int i = 0; i < totalPaths[index].size(); i++) {
-
-                    //output name of airport
-                    outFile << totalPaths[index].get(i).getName();
-
-                    //checks to see if first departure node or not
-                    if(totalPaths[index].get(i).getAirline() == ""){
-
-                    }
-                    else{
-                         outFile << " (" << totalPaths[index].get(i).getAirline() << ")";
-                    }
-                    if(i == totalPaths[index].size()-1){
-                        outFile << ". ";
-
-                    }
-                    else{
-                        outFile << " -> ";
-                        //if it is not direct flight (more than 2 nodes), do this
-                        if((totalPaths[index].size() > 2)){
-                            //if airline names don't match, 65 min time incr
-                            if(!(totalPaths[index].get(i).getAirline() == totalPaths[index].get(i+1).getAirline())){
-                                layoverCost += 19;
-                                layoverTime += 65;
-                            }
-                        }
-                    }
-                    totalTime += totalPaths[index].get(i).getTime();
-                }
-
-                //make sure the end destination node does not get extra time/cost added onto it
-                if(totalPaths[index].size() > 2){
-                    layoverCost -= 19;
-                    layoverTime -= 43;
-                }
-
-                outFile << "Time: " << totalTime + layoverTime<< " "; //outputs total time
-                outFile << "Cost: " << fixed << setprecision(2) << totalCost + layoverCost << endl; //outputs total cost
-            }
         }
         else if (requestedInput == 'T') { //if ordering by time
-            int pathNumber = 0;
-            int recentLowest = 0; //track most recen time
-            for (int i = 0; i < 3; i++) {
-                if (i > totalPaths.getSize()-1) {
-                    break;
-                }
-                pathNumber++;
-                int index = -1; //path with lowest time
-                int fastest = 2000;
-                for (int i = 0; i < totalPaths.getSize(); i++) {
-                    int currTime = 0;
-                    for (int j = 0; j < totalPaths[i].size(); j++) {
-                        currTime += totalPaths[i].get(j).getTime(); //calculates total time of current path
-                    }
-
-                    //sets currTime as fastest if faster tha nprev
-                    if (currTime < fastest && currTime > recentLowest) {
-                        fastest = currTime;
-                        index = i;
-                    }
-                }
-
-                recentLowest = fastest;
-
-                int totalTime = fastest;
-                double totalCost = 0;
-
-                //outputs formatted path
-                outFile << "Path " << pathNumber << ": ";
-
-                for (int i = 0; i < totalPaths[index].size(); i++) { //outputs each airport in path
-                    outFile << totalPaths[index].get(i).getName();
-
-                    if(totalPaths[index].get(i).getAirline() == ""){
-
-                    }
-                    else{
-                         outFile << " (" << totalPaths[index].get(i).getAirline() << ")";
-                    }
-                    if(i == totalPaths[index].size()-1){
-                        outFile << ". ";
-
-                    }
-                    else{
-                        outFile << " -> ";
-                        if((totalPaths[index].size() > 2)){
-                            if(!(totalPaths[index].get(i).getAirline() == totalPaths[index].get(i+1).getAirline())){
-                                layoverCost += 19;
-                                layoverTime += 65;
-                            }
-                        }
-                    }
-                    totalCost += totalPaths[index].get(i).getCost();
-                }
-                if(totalPaths[index].size() > 2){
-                    layoverCost -= 19;
-                    layoverTime -= 43;
-                }
-                outFile << "Time: " << totalTime + layoverTime << " "; //outputs total time
-                outFile << "Cost: " << fixed << setprecision(2) << totalCost + layoverCost<< endl; //outputs total cost
-            }
+            calculateTime(outFile);
         }
-        outFile << endl;
-    }
 
-    //remove paths to move onto next flight
-    while (totalPaths.empty() == false) {
-        totalPaths.pop_back();
+        //remove paths to move onto next flight
+        while (totalPaths.empty() == false) {
+            totalPaths.pop_back();
+        }
     }
 }
+

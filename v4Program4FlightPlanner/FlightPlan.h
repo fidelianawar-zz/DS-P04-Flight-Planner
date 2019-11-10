@@ -21,6 +21,10 @@ class FlightPlan {
         DSVector<DSLinkedList<AirportCity>>& getAdjList(); //used to set adjlist equal to DSVec<DSLL<AirportCity>>
         void printFlightData(); //prints out adjacency list
 
+        void calculateCost(ofstream&);
+        void calculateTime(ofstream&);
+        void outputData(ofstream&);
+
         void determinePath(AirportCity, DSString); //uses iterative backtracking to find paths
         void displayPath(ofstream&, char); //outputs paths to file
 
@@ -28,6 +32,11 @@ class FlightPlan {
         DSVector<DSLinkedList<AirportCity>> adjacencyList;
         DSStack<AirportCity> flightPath;
         DSVector<DSStack<AirportCity>> totalPaths; //all possible paths for a requested flight
+
+
+        int pathNumber = 0;
+        double recentLowest = 0;
+
 };
 
 #endif // FLIGHTPLAN_H
