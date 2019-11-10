@@ -196,7 +196,7 @@ void FlightPlan::calculateCost(ofstream& outFile){
             break;
         }
         pathNumber++;
-        int index = 0; //index of path with lowest cost
+        int index = -1; //index of path with lowest cost
         double cheapest = 20000;
         for (int i = 0; i < totalPaths.getSize(); i++) {
             double currCost = 0;
@@ -271,7 +271,7 @@ void FlightPlan::calculateTime(ofstream& outFile){
             break;
         }
         pathNumber++;
-        int index = 0; //path with lowest time
+        int index = -1; //path with lowest time
         int fastest = 2000;
         for (int i = 0; i < totalPaths.getSize(); i++) {
             int currTime = 0;
