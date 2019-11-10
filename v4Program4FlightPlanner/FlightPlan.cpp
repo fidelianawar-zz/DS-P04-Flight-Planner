@@ -97,18 +97,7 @@ void FlightPlan::readRequestedFlights(char* requestedFlights, char* outputFile) 
         DSString departure(departureCity);
         DSString arrival(arrivalCity);
 
-        //print flight header
-        outfile << "Flight " << currFlight << ": ";
-        outfile << departure<< ", " << arrival << " ";
-        outfile << "(";
-
-        if (requestedInput == 'C') {
-            outfile << "Cost)" << endl;
-        }
-
-        else if (requestedInput == 'T') {
-            outfile << "Time)" << endl;
-        }
+        outfile << "Flight " << currFlight << ": " << departure<< ", " << arrival << " ";
 
         //checks to see if departure/arrival cities already exist in adjacency list or not
         bool departureExists = false;
@@ -131,7 +120,7 @@ void FlightPlan::readRequestedFlights(char* requestedFlights, char* outputFile) 
             outfile << "Arrival location is not found" << endl << endl;
         }
         else if (departureExists == false){
-            outfile << "Departure locationis not found" << endl << endl;
+            outfile << "Departure location is not found" << endl << endl;
         }
         else {
             if (!(departure == arrival)) {
@@ -198,14 +187,16 @@ void FlightPlan::calculateCost(ofstream& outFile){
     double layoverCost = 0.0;
     int layoverTime = 0;
     int pathNumber = 0;
-    double recentLowest = 0;
+    double recentCheapest = 0;
+
+     outFile << "(Cost)" << endl;
 
     for (int i = 0; i < 3; i++) { //only iterate 3 times
         if (i > totalPaths.getSize()-1) { //if paths number < 3, stop
             break;
         }
         pathNumber++;
-        int index = -1; //index of path with lowest cost
+        int index = 0; //index of path with lowest cost
         double cheapest = 20000;
         for (int i = 0; i < totalPaths.getSize(); i++) {
             double currCost = 0;
@@ -214,14 +205,13 @@ void FlightPlan::calculateCost(ofstream& outFile){
             }
 
             //sets currCost as lowest it is lower than prev
-            if (currCost < cheapest && currCost > recentLowest) {
+            if (currCost < cheapest && currCost > recentCheapest) {
                 cheapest = currCost;
                 index = i;
             }
         }
 
-        recentLowest = cheapest;
-
+        recentCheapest = cheapest;
         double totalCost = cheapest;
         int totalTime = 0;
 
@@ -267,19 +257,21 @@ void FlightPlan::calculateCost(ofstream& outFile){
 
 }
 
-void FlightPlan::calculateTime(ofstream& outFile)
-{
+void FlightPlan::calculateTime(ofstream& outFile){
+
     int pathNumber = 0;
-    int recentLowest = 0; //track most recen time
+    int recentFastest = 0; //track most recen time
     double layoverCost = 0.0;
     int layoverTime = 0;
+
+    outFile << "(Time)" << endl;
 
     for (int i = 0; i < 3; i++) {
         if (i > totalPaths.getSize()-1) {
             break;
         }
         pathNumber++;
-        int index = -1; //path with lowest time
+        int index = 0; //path with lowest time
         int fastest = 2000;
         for (int i = 0; i < totalPaths.getSize(); i++) {
             int currTime = 0;
@@ -288,13 +280,13 @@ void FlightPlan::calculateTime(ofstream& outFile)
             }
 
             //sets currTime as fastest if faster tha nprev
-            if (currTime < fastest && currTime > recentLowest) {
+            if (currTime < fastest && currTime > recentFastest) {
                 fastest = currTime;
                 index = i;
             }
         }
 
-        recentLowest = fastest;
+        recentFastest = fastest;
 
         int totalTime = fastest;
         double totalCost = 0;
